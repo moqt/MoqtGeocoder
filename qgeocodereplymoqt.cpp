@@ -1,7 +1,7 @@
 #include "qgeocodereplymoqt.h"
 #include "qgeocodingmanagerenginemoqt.h"
 
-#include "QDebug"
+#include <QDebug>
 
 
 QGeoCodeReplyMoqt::QGeoCodeReplyMoqt(QGeoCodingManagerEngineMoqt *geocodingManager, int limit, int offset)
@@ -14,7 +14,7 @@ QGeoCodeReplyMoqt::QGeoCodeReplyMoqt(QGeoCodingManagerEngineMoqt *geocodingManag
 
 QGeoCodeReplyMoqt::~QGeoCodeReplyMoqt()
 {
-//    qDebug() << "QGeoCodeReplyMoqt::~QGeoCodeReplyMoqt()";
+    // qDebug() << "QGeoCodeReplyMoqt::~QGeoCodeReplyMoqt()" << this;
 }
 
 

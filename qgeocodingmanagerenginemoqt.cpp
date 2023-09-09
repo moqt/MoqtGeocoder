@@ -127,7 +127,7 @@ QGeoCodeReply *QGeoCodingManagerEngineMoqt::geocode(const QString &address, int 
 
     initAndroidGeocoder();
 
-    QGeoCodeReplyMoqt *geocodeReply = new QGeoCodeReplyMoqt(this, limit, offset);
+    const QPointer<QGeoCodeReplyMoqt> geocodeReply = new QGeoCodeReplyMoqt(this, limit, offset);
     QtConcurrent::run([geocodeReply, address, androidGeocoder = m_androidGeocoder, limit] () {
         const QAndroidJniObject jaddresses = androidGeocoder.callObjectMethod("getFromLocationName", "(Ljava/lang/String;I)Ljava/util/List;",
                                                                               QAndroidJniObject::fromString(address).object<jstring>(), limit);
@@ -145,7 +145,7 @@ QGeoCodeReply *QGeoCodingManagerEngineMoqt::reverseGeocode(const QGeoCoordinate 
 
     initAndroidGeocoder();
 
-    QGeoCodeReplyMoqt *geocodeReply = new QGeoCodeReplyMoqt(this, 1, 0);
+    const QPointer<QGeoCodeReplyMoqt> geocodeReply = new QGeoCodeReplyMoqt(this, 1, 0);
     QtConcurrent::run([geocodeReply, coordinate, androidGeocoder = m_androidGeocoder] () {
         const QAndroidJniObject jaddresses = androidGeocoder.callObjectMethod("getFromLocation", "(DDI)Ljava/util/List;",
                                                                              coordinate.latitude(), coordinate.longitude(), 1);

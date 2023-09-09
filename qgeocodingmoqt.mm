@@ -3,9 +3,9 @@
 
 #include <QtPositioning/QGeoCoordinate>
 #include <QtPositioning/QGeoAddress>
-#include <QDebug>
-
 #include <CoreLocation/CoreLocation.h>
+#include <QDebug>
+#include <QPointer>
 
 
 namespace
@@ -79,7 +79,7 @@ QGeoCodeReply *QGeoCodingManagerEngineMoqt::geocode(const QString &address, int 
 
     initCLGeocoder();
 
-    QGeoCodeReplyMoqt *geocodeReply = new QGeoCodeReplyMoqt(this, limit, offset);
+    const QPointer<QGeoCodeReplyMoqt> geocodeReply = new QGeoCodeReplyMoqt(this, limit, offset);
     [m_clgeocoder geocodeAddressString:address.toNSString()
               completionHandler:^(NSArray<CLPlacemark *> *placemarks, NSError *error) {
                   completeRequest(geocodeReply, placemarks, error);
@@ -96,7 +96,7 @@ QGeoCodeReply *QGeoCodingManagerEngineMoqt::reverseGeocode(const QGeoCoordinate 
 
     initCLGeocoder();
 
-    QGeoCodeReplyMoqt *geocodeReply = new QGeoCodeReplyMoqt(this, 1, 0);
+    const QPointer<QGeoCodeReplyMoqt> geocodeReply = new QGeoCodeReplyMoqt(this, 1, 0);
     CLLocation *clLocation = [[CLLocation alloc]initWithLatitude:coordinate.latitude()
                                                        longitude:coordinate.longitude()];
     [m_clgeocoder reverseGeocodeLocation:clLocation
