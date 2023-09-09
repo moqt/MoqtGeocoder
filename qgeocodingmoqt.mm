@@ -3,6 +3,7 @@
 
 #include <QtPositioning/QGeoCoordinate>
 #include <QtPositioning/QGeoAddress>
+#include <QDebug>
 
 #include <CoreLocation/CoreLocation.h>
 
@@ -15,7 +16,9 @@ void completeRequest(QGeoCodeReplyMoqt *geocodeReply,
 {
     if (error) {
         NSLog(@"Geocode failed with error: %@", error);
-        geocodeReply->onError(QGeoCodeReply::CommunicationError, "CLGeocoder error");
+        QMetaObject::invokeMethod(geocodeReply, "onError", Qt::QueuedConnection,
+                                  Q_ARG(QGeoCodeReply::Error, QGeoCodeReply::CommunicationError),
+                                  Q_ARG(QString, "CLGeocoder error"));
         return;
     }
 
@@ -42,11 +45,14 @@ void completeRequest(QGeoCodeReplyMoqt *geocodeReply,
 
             locations.append(location);
         }
-        geocodeReply->onFinished(locations);
+        QMetaObject::invokeMethod(geocodeReply, "onFinished", Qt::QueuedConnection,
+                                  Q_ARG(QList<QGeoLocation>, locations));
 
     } else {
         NSLog(@"Geocode returned no placemarks");
-        geocodeReply->onError(QGeoCodeReply::CombinationError, "No placemarks");
+        QMetaObject::invokeMethod(geocodeReply, "onError", Qt::QueuedConnection,
+                                  Q_ARG(QGeoCodeReply::Error, QGeoCodeReply::CombinationError),
+                                  Q_ARG(QString, "No placemarks"));
     }
 }
 

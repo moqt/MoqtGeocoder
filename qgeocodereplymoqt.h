@@ -14,8 +14,8 @@ public:
     ~QGeoCodeReplyMoqt() override;
 
 public slots:
-    void onError(Error error, const QString &errorString);
-    void onFinished(const QList<QGeoLocation> &locations);
+    void onError(Error error, QString errorString);
+    void onFinished(QList<QGeoLocation> locations);
 
 private:
     QGeoCodingManagerEngineMoqt* m_geocodingManager;

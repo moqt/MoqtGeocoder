@@ -18,14 +18,14 @@ QGeoCodeReplyMoqt::~QGeoCodeReplyMoqt()
 }
 
 
-void QGeoCodeReplyMoqt::onError(QGeoCodeReplyMoqt::Error error, const QString &errorString)
+void QGeoCodeReplyMoqt::onError(QGeoCodeReplyMoqt::Error error, QString errorString)
 {
     setError(error, errorString);
     emit m_geocodingManager->error(this, error, errorString);
 }
 
 
-void QGeoCodeReplyMoqt::onFinished(const QList<QGeoLocation> &locations)
+void QGeoCodeReplyMoqt::onFinished(QList<QGeoLocation> locations)
 {
     setLocations(locations);
     setFinished(true);
