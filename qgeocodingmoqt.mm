@@ -59,30 +59,16 @@ void completeRequest(QGeoCodeReplyMoqt *geocodeReply,
 }
 
 
-void QGeoCodingManagerEngineMoqt::initCLGeocoder()
-{
-    if (!m_clgeocoder) {
-        m_clgeocoder = [[CLGeocoder alloc] init];
-    }
-}
-
-
-QGeoCodingManagerEngineMoqt::~QGeoCodingManagerEngineMoqt()
-{
-    [m_clgeocoder release];
-}
-
-
 QGeoCodeReply *QGeoCodingManagerEngineMoqt::geocode(const QString &address, int limit, int offset, const QGeoShape &bounds)
 {
     Q_UNUSED(bounds)
 
-    initCLGeocoder();
-
     const QPointer<QGeoCodeReplyMoqt> geocodeReply = new QGeoCodeReplyMoqt(this, limit, offset);
-    [m_clgeocoder geocodeAddressString:address.toNSString()
+    CLGeocoder *clgeocoder = [[CLGeocoder alloc] init];
+    [clgeocoder geocodeAddressString:address.toNSString()
               completionHandler:^(NSArray<CLPlacemark *> *placemarks, NSError *error) {
                   completeRequest(geocodeReply, placemarks, error);
+                  [clgeocoder release]; // ARC is disabled in Qt
               }];
 
     return geocodeReply;
@@ -94,14 +80,15 @@ QGeoCodeReply *QGeoCodingManagerEngineMoqt::reverseGeocode(const QGeoCoordinate 
 {
     Q_UNUSED(bounds)
 
-    initCLGeocoder();
-
     const QPointer<QGeoCodeReplyMoqt> geocodeReply = new QGeoCodeReplyMoqt(this, 1, 0);
-    CLLocation *clLocation = [[CLLocation alloc]initWithLatitude:coordinate.latitude()
+    CLLocation *cllocation = [[CLLocation alloc]initWithLatitude:coordinate.latitude()
                                                        longitude:coordinate.longitude()];
-    [m_clgeocoder reverseGeocodeLocation:clLocation
+    CLGeocoder *clgeocoder = [[CLGeocoder alloc] init];
+    [clgeocoder reverseGeocodeLocation:cllocation
               completionHandler:^(NSArray<CLPlacemark *> *placemarks, NSError *error) {
                   completeRequest(geocodeReply, placemarks, error);
+                  [cllocation release]; // ARC is disabled in Qt
+                  [clgeocoder release]; // ARC is disabled in Qt
               }];
 
     return geocodeReply;
