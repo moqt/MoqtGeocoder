@@ -22,6 +22,12 @@ QString jaddressProperty(const QAndroidJniObject& jaddress, const char* name)
 
 void completeRequest(QGeoCodeReplyMoqt *geocodeReply, const QAndroidJniObject& jaddresses)
 {
+    QAndroidJniEnvironment env;
+    if (env->ExceptionCheck()) {
+        // Handle exception here.
+        env->ExceptionClear();
+    }
+
     if (!jaddresses.isValid() || jaddresses.callMethod<jboolean>("isEmpty")) {
         QMetaObject::invokeMethod(geocodeReply, "onError", Qt::QueuedConnection,
                                   Q_ARG(QGeoCodeReply::Error, QGeoCodeReply::CommunicationError),
